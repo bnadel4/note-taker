@@ -38,6 +38,14 @@ app.post('/api/notes', (req, res) => {
   res.send(req.body);
 });
 
+app.delete('/api/notes/:id', (req, res) => {
+  const id = req.params.id;
+  const notes = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
+  const filteredNotes = notes.filter(note => note.id !== id);
+  fs.writeFileSync('./db/db.json', JSON.stringify(filteredNotes));
+  res.send(filteredNotes);
+});
+
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
