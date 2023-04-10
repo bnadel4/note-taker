@@ -24,11 +24,16 @@ app.get('/api/notes', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-  console.log('req.body', req.body);
-  fs.writeFile('./db/db.json', JSON.stringify(req.body), (err) => {
+  let db = [];
+  fs.readFile('./db/db.json', (err, data) => {
     if (err) throw err;
-    console.log('req.body', req.body);
+    db = JSON.parse(data);
+    db.push(req.body);
+    fs.writeFile('./db/db.json', JSON.stringify(db), (err) => {
+      if (err) throw err;
+    });
   });
+  res.send(req.body);
 });
 
 app.get('*', (req, res) =>
