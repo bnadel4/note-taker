@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const path = require('path');
 
@@ -27,7 +28,8 @@ app.post('/api/notes', (req, res) => {
   let db = [];
   fs.readFile('./db/db.json', (err, data) => {
     if (err) throw err;
-    db = JSON.parse(data);
+    db = JSON.parse(data); 
+    req.body.id = uuidv4();
     db.push(req.body);
     fs.writeFile('./db/db.json', JSON.stringify(db), (err) => {
       if (err) throw err;
